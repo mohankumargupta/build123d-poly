@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "build123d_poly"
+version = "0.1"
+dependencies = ["build123d==0.8"]
+requires-python = ">=3.10"
+authors = [{ name = "Mohan Gupta" }]
+description = "Adds a polyline tool that allows you to draw lines and arcs in one motion"
+readme = "README.md"
+license = { text = "MIT License" }
+keywords = ["build123d"]
+classifiers = ["Programming Language :: Python"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[project.urls]
+Homepage = "https://github.com/mohankumargupta/build123d-poly"
+Documentation = "https://github.com/mohankumargupta/build123d-poly"
+Repository = "https://github.com/mohankumargupta/build123d-poly"
