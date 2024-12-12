@@ -43,7 +43,7 @@ class BuildPoly(BuildLine):
         Args:
             end_point: Destination point of the line
         """
-        l = Line(self.current_point, end_point)
+        l = Line(end_point, self.current_point)
         self.current_point = end_point
         return l
 

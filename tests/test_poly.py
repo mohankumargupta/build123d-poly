@@ -5,7 +5,17 @@ from build123d import Plane, Mode, Line
 from build123d_poly import BuildPoly, line
 
 def test_line():
-    poly = BuildPoly()
+    with BuildPoly(start_point=(1,2)) as poly:
+        line((21,2))
+
+    wires = poly.wires()
+    vertices = poly.vertices()
+
+    vertices_list = {(vertex.X,vertex.Y,vertex.Z) for vertex in vertices}
+    assert len(wires) == 1
+    assert len(vertices) == 2
+    assert vertices_list == {(21.0,2.0,0.0), (1.0,2.0,0.0)}
+ 
 
 # def test_buildpoly_initialization():
 #     """Test basic initialization of BuildPoly"""
