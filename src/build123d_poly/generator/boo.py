@@ -1,9 +1,9 @@
 # Automatically generated functions
 
-def method1(x: int, y: str = 'default') -> bool:
-    pass
+from build123d import *
+from typing import Union
 
 
-def method2(a: float, b: float) -> float:
+def tangent_arc(end_point: Union, tangent: Union, tangent_from_first: bool = True, mode: Mode = <Mode.ADD>) -> TangentArc:
     pass
 

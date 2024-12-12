@@ -1,6 +1,8 @@
 import inspect
 import os
 from jinja2 import Template
+from build123d_poly.runtime import mark
+from build123d_poly import BuildPoly
 
 def generate_boo_py(cls, decorator):
     """
@@ -14,8 +16,8 @@ def generate_boo_py(cls, decorator):
     decorated_methods = []
     for name, member in inspect.getmembers(cls):
         if (callable(member) and 
-            hasattr(member, '__decorators__') and 
-            decorator in member.__decorators__):
+            hasattr(member, '__drawing1d__') and 
+            decorator in member.__drawing1d__):
             
             # Get signature information
             sig = inspect.signature(member)
@@ -61,6 +63,10 @@ def generate_boo_py(cls, decorator):
     
     # Jinja2 template
     template_str = """# Automatically generated functions
+
+from build123d import *
+from typing import Union
+
 {% for method in methods %}
 def {{ method.name }}({% for param in method.params -%}
     {{ param.name }}{% if param.annotation %}: {{ param.annotation }}{% endif %}{% if param.default %} = {{ param.default }}{% endif %}{% if not loop.last %}, {% endif %}
@@ -105,4 +111,4 @@ class MyClass:
         pass
 
 # Generate boo.py
-generate_boo_py(MyClass, custom_marker)
+generate_boo_py(BuildPoly, mark)
