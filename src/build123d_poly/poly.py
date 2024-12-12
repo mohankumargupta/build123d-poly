@@ -1,5 +1,6 @@
-from typing import Any, Optional, Self, Tuple, Type, TypeVar
+from typing import Any, Iterable, Optional, Self, Tuple, Type, TypeVar, Union
 from build123d import *
+from .runtime import mark
 
 T = TypeVar('T', bound='BuildPoly')
 
@@ -46,7 +47,12 @@ class BuildPoly(BuildLine):
         l = Line(end_point, self.current_point)
         self.current_point = end_point
         return l
-
+    
+    @mark
+    def tangent_arc(self, end_point: Union[VectorLike, Iterable[VectorLike]], tangent: VectorLike, tangent_from_first: bool = True,mode: Mode = Mode.ADD)->TangentArc:
+        pts = [self.current_point, end_point]
+        return TangentArc(pts, tangent, tangent_from_first, mode)
+        
     @classmethod
     def _get_manager(cls: Type[T]) -> T:
         """

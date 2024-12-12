@@ -1,0 +1,7 @@
+# Stub file for free functions generated from {{ class_name }}
+
+from typing import Any
+
+{% for method_name, signature in methods %}
+def {{ method_name }}{{ signature }} -> Any: ...
+{% endfor %}
