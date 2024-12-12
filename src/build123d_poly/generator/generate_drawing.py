@@ -1,30 +1,108 @@
 import inspect
-from typing import Any, List, Type
-from build123d_poly import BuildPoly
-from build123d_poly.runtime import mark
+import os
+from jinja2 import Template
 
-def get_decorated_members(cls: Type[Any], decorator: Any) -> List[str]:
+def generate_boo_py(cls, decorator):
     """
-    Retrieve names of class members decorated with a specific decorator.
+    Generate boo.py with free functions matching decorated class methods using Jinja2.
     
     Args:
         cls (Type): The class to inspect
         decorator (Any): The decorator to look for
-    
-    Returns:
-        List[str]: Names of members with the specified decorator
     """
-    decorated_members = []
-    
-    # Inspect class members
+    # Collect decorated methods
+    decorated_methods = []
     for name, member in inspect.getmembers(cls):
-        # Check if the member has the specified decorator
-        if hasattr(member, '__drawing1d__'):
-            if decorator in member.__drawing1d__:
-                decorated_members.append(name)
-    
-    return decorated_members
+        if (callable(member) and 
+            hasattr(member, '__decorators__') and 
+            decorator in member.__decorators__):
+            
+            # Get signature information
+            sig = inspect.signature(member)
+            
+            # Remove 'self' parameter for free function
+            free_func_params = list(sig.parameters.values())[1:]
+            new_sig = sig.replace(parameters=free_func_params)
+            
+            # Prepare parameter details
+            params = []
+            parameters = new_sig.parameters
+            for param in parameters:
 
-# Get members with the custom marker
-decorated_methods = get_decorated_members(BuildPoly, mark)
-print(decorated_methods)  # Should print ['method1', 'method2']
+                param_name = parameters[param].name
+                annotation = parameters[param].annotation
+                annotation_name = annotation.__name__
+                default = parameters[param].default
+
+                param_info = {
+                    'name': param_name,
+                    'annotation': (
+                        annotation_name
+                        if annotation is not inspect.Parameter.empty
+                        else None
+                    ),
+                    'default': (
+                        repr(default) 
+                        if default is not inspect.Parameter.empty 
+                        else None
+                    )
+                }
+                params.append(param_info)
+            
+            decorated_methods.append({
+                'name': name,
+                'params': params,
+                'return_annotation': (
+                    sig.return_annotation.__name__ 
+                    if sig.return_annotation is not inspect.Signature.empty 
+                    else None
+                )
+            })
+    
+    # Jinja2 template
+    template_str = """# Automatically generated functions
+{% for method in methods %}
+def {{ method.name }}({% for param in method.params -%}
+    {{ param.name }}{% if param.annotation %}: {{ param.annotation }}{% endif %}{% if param.default %} = {{ param.default }}{% endif %}{% if not loop.last %}, {% endif %}
+{%- endfor %}){%- if method.return_annotation %} -> {{ method.return_annotation }}{% endif %}:
+    pass
+
+{% endfor %}"""
+    
+    # Create Jinja2 template
+    template = Template(template_str)
+    
+    # Render template
+    rendered_content = template.render(methods=decorated_methods)
+    
+    # Write to boo.py
+    with open('boo.py', 'w') as f:
+        f.write(rendered_content)
+    
+    print(f"Generated boo.py with {len(decorated_methods)} functions")
+
+# Custom marker decorator
+def custom_marker(func):
+    if not hasattr(func, '__decorators__'):
+        func.__decorators__ = set()
+    func.__decorators__.add(custom_marker)
+    return func
+
+# Example class with typed methods
+class MyClass:
+    @custom_marker
+    def method1(self, x: int, y: str = 'default') -> bool:
+        """Example method with annotations"""
+        return True
+    
+    @custom_marker
+    def method2(self, a: float, b: float) -> float:
+        """Another example method"""
+        return a + b
+    
+    def method3(self):
+        """Undecorated method"""
+        pass
+
+# Generate boo.py
+generate_boo_py(MyClass, custom_marker)
