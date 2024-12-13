@@ -1,9 +1,6 @@
 # Automatically generated functions from generate_drawing_1d.py
-
 from build123d import *
-
 {% for method in methods %}
-def {{ method.name }}( {{ method.params_string }}  )-> {{ method.return_string }}:
+def {{ method.name }}({{ method.params_string }}) -> {{ method.return_string }}:
     pass
-
 {% endfor %}
