@@ -1,12 +1,14 @@
 import inspect
 import os
-from jinja2 import Template
+import typing
+from jinja2 import Environment, FileSystemLoader, Template
 from build123d_poly.runtime import mark
 from build123d_poly import BuildPoly
+from pathlib import Path
 
-def generate_boo_py(cls, decorator):
+def generate_1d_functions(cls, decorator, template_directory, template_file, output_directory, output_file):
     """
-    Generate boo.py with free functions matching decorated class methods using Jinja2.
+    Generate drawing_1d.py with free functions matching decorated class methods using Jinja2.
     
     Args:
         cls (Type): The class to inspect
@@ -21,7 +23,9 @@ def generate_boo_py(cls, decorator):
             
             # Get signature information
             sig = inspect.signature(member)
-            
+            hints = typing.get_type_hints(member)
+             
+
             # Remove 'self' parameter for free function
             free_func_params = list(sig.parameters.values())[1:]
             new_sig = sig.replace(parameters=free_func_params)
@@ -75,17 +79,16 @@ def {{ method.name }}({% for param in method.params -%}
 
 {% endfor %}"""
     
-    # Create Jinja2 template
-    template = Template(template_str)
-    
-    # Render template
+    env = Environment(loader=FileSystemLoader(template_directory))
+    template = env.get_template(template_file)
     rendered_content = template.render(methods=decorated_methods)
-    
-    # Write to boo.py
-    with open('boo.py', 'w') as f:
+
+    output = Path(output_directory) / output_file
+
+    with open(output, 'w') as f:
         f.write(rendered_content)
     
-    print(f"Generated boo.py with {len(decorated_methods)} functions")
+    print(f"Generated drawing_1d.py with {len(decorated_methods)} functions")
 
 # Custom marker decorator
 def custom_marker(func):
@@ -110,5 +113,9 @@ class MyClass:
         """Undecorated method"""
         pass
 
-# Generate boo.py
-generate_boo_py(BuildPoly, mark)
+
+output_directory = Path(__file__).parent.parent
+output_file = "drawing_1d.py"
+template_file = "generate_1d.j2"
+template_directory = Path(__file__).parent / "templates" 
+generate_1d_functions(BuildPoly, mark, template_directory, template_file, output_directory, output_file)

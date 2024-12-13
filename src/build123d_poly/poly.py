@@ -49,7 +49,7 @@ class BuildPoly(BuildLine):
         return l
     
     @mark
-    def tangent_arc(self, end_point: Union[VectorLike, Iterable[VectorLike]], tangent: VectorLike, tangent_from_first: bool = True,mode: Mode = Mode.ADD)->TangentArc:
+    def tangent_arc(self, end_point: VectorLike, tangent: VectorLike, tangent_from_first: bool = True,mode: Mode = Mode.ADD)->TangentArc:
         pts = [self.current_point, end_point]
         return TangentArc(pts, tangent, tangent_from_first, mode)
         

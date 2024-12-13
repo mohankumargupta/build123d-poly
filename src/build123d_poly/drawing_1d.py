@@ -1,7 +1,6 @@
-# Automatically generated functions
+# Automatically generated functions from generate_drawing_1d.py
 
 from build123d import *
-from typing import Union
 
 
 def tangent_arc(end_point: Union, tangent: Union, tangent_from_first: bool = True, mode: Mode = <Mode.ADD>) -> TangentArc:

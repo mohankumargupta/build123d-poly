@@ -1,0 +1,11 @@
+# Automatically generated functions from generate_drawing_1d.py
+
+from build123d import *
+
+{% for method in methods %}
+def {{ method.name }}({% for param in method.params -%}
+    {{ param.name }}{% if param.annotation %}: {{ param.annotation }}{% endif %}{% if param.default %} = {{ param.default }}{% endif %}{% if not loop.last %}, {% endif %}
+{%- endfor %}){%- if method.return_annotation %} -> {{ method.return_annotation }}{% endif %}:
+    pass
+
+{% endfor %}
