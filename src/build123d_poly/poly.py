@@ -48,7 +48,7 @@ class BuildPoly(BuildLine):
         self.current_point = end_point
         return l
     
-    @mark
+    @mark("end_point: VectorLike, tangent: VectorLike, tangent_from_first: bool = True,mode: Mode = Mode.ADD", "TangentArc")
     def tangent_arc(self, end_point: VectorLike, tangent: VectorLike, tangent_from_first: bool = True,mode: Mode = Mode.ADD)->TangentArc:
         pts = [self.current_point, end_point]
         return TangentArc(pts, tangent, tangent_from_first, mode)

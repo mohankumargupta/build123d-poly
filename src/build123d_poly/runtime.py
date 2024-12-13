@@ -1,8 +1,28 @@
-def mark(func):
-    if not hasattr(func, '__drawing1d__'):
-        func.__drawing1d__ = set()
-    func.__drawing1d__.add(mark)
-    return func
+# def mark(func):
+#     if not hasattr(func, '__drawing1d__'):
+#         func.__drawing1d__ = set()
+#     func.__drawing1d__.add(mark)
+#     return func
+
+from functools import wraps
+
+def mark(params_string: str, return_string: str):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs)
+        
+        if not hasattr(wrapper, '__drawing1d__'):
+            wrapper.__drawing1d__ = set()
+        wrapper.__drawing1d__.add(mark)
+        
+        # Store the parameters
+        wrapper.__mark_params_string = params_string
+        wrapper.__mark_return_string = return_string
+        
+        return wrapper
+    return decorator
+
 
 
 class FreeFunctionMetaclass(type):

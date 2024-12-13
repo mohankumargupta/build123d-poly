@@ -25,6 +25,11 @@ def generate_1d_functions(cls, decorator, template_directory, template_file, out
             sig = inspect.signature(member)
             hints = typing.get_type_hints(member)
              
+            params_string = inspect.getattr_static(member, '__mark_params_string')
+            return_string = inspect.getattr_static(member, '__mark_return_string')
+
+            print(params_string)
+            print(return_string)
 
             # Remove 'self' parameter for free function
             free_func_params = list(sig.parameters.values())[1:]
@@ -62,7 +67,9 @@ def generate_1d_functions(cls, decorator, template_directory, template_file, out
                     sig.return_annotation.__name__ 
                     if sig.return_annotation is not inspect.Signature.empty 
                     else None
-                )
+                ),
+                'params_string': params_string,
+                'return_string':  return_string
             })
     
     # Jinja2 template

@@ -26,7 +26,11 @@ def tangent_arc(self, end_point: VectorLike, tangent: VectorLike, tangent_from_f
 # To retrieve the parameters later
 import inspect
 
+
 params_string = inspect.getattr_static(tangent_arc, '__mark_params_string')
 return_string = inspect.getattr_static(tangent_arc, '__mark_return_string')
 print(f"Parameter 1: {params_string}")
 print(f"Parameter 2: {return_string}")
+
+sig = inspect.signature(tangent_arc)
+print(sig)
