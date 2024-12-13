@@ -1,6 +1,8 @@
 # Automatically generated functions from generate_drawing_1d.py
 from build123d import *
+from .poly import BuildPoly
+
 {% for method in methods %}
 def {{ method.name }}({{ method.params_string }}) -> {{ method.return_string }}:
-    pass
+    BuildPoly._current_manager.{{ method.name }}({{ method.poly_string }})
 {% endfor %}

@@ -60,9 +60,12 @@ def generate_1d_functions(cls, decorator, template_directory, template_file, out
                 }
                 params.append(param_info)
             
+            poly = ", ".join([p['name'] for p in params])
+
             decorated_methods.append({
                 'name': name,
                 'params': params,
+                'poly_string': poly,
                 'return_annotation': (
                     sig.return_annotation.__name__ 
                     if sig.return_annotation is not inspect.Signature.empty 
