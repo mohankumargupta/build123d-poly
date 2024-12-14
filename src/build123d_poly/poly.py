@@ -12,16 +12,17 @@ class BuildPoly(BuildLine):
         self, 
         workplane: Plane = Plane.XY, 
         mode: Mode = Mode.ADD, 
-        start_point: Optional[Tuple[float, float]] = None, 
+        start_point: VectorLike = (0,0), 
         close: bool = True
     ):
         # Explicitly type annotate instance variables
-        self.start_point: Optional[Tuple[float, float]] = start_point
-        self.current_point: Optional[Tuple[float, float]] = self.start_point
+        self.start_point: VectorLike = start_point
+        self.current_point: VectorLike = self.start_point
         self.close: bool = close
         
         # Call parent constructor with explicit type checking
         super().__init__(workplane, mode)
+        self.__class__.__name__  = 'BuildLine'        
 
     def __enter__(self: Self) -> Self:
         # Ensure type safety for context manager entry
