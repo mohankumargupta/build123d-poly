@@ -1,6 +1,6 @@
 from build123d import *
 from build123d_poly import *
-from ocp_vscode import show_object
+from ocp_vscode import show
 
 # https://build123d.readthedocs.io/en/latest/introductory_examples.html
 # 8. Polylines
@@ -18,5 +18,5 @@ with BuildPart() as beam:
     extrude(amount=L)
 
 part = beam.part
-show_object(part)
+show(part)
 export_stl(part, "example1.stl")
